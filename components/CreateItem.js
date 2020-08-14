@@ -1,39 +1,16 @@
-import React, { useState } from "react";
 import Router from 'next/router';
-import {gql, useMutation} from '@apollo/client';
-
-const CREATE_ITEM_MUTATION = gql`
-    mutation CREATE_ITEM_MUTATION(
-        $title: String!
-        $description: String! 
-        $price: Int! 
-        $image: String 
-        $largeImage: String
-    ) {
-        createItem(
-            title: $title
-            description: $description
-            price: $price
-            image: $image
-            largeImage: $largeImage 
-        ) {
-            id
-        }
-    }
-`;
+import React, { useState } from "react";
+import {useCreateItem} from "../hooks/itemHooks";
 
 const CreateItem = () => {
   const [item, setItem] = useState({title: 'item', description: 'item description', price:20, image:'', largeImage:'' })
-  const [createItemMutation, {loading, error, data, called}] = useMutation(CREATE_ITEM_MUTATION);
+  const {createItem, loading, error, result} = useCreateItem()
 
-  if(data){
-    const {createItem} = data;
-    if(createItem){
-      Router.push({
-        pathname: '/item',
-        query: { id: createItem.id }
-      })
-    }
+  if(result){
+    Router.push({
+      pathname: '/item',
+      query: { id: result.id }
+    })
   }
 
   const handleInputChange = ({target}) => {
@@ -50,7 +27,7 @@ const CreateItem = () => {
     {loading && <div>Loading....</div>}
     <form className="shadow-md rounded p-10" onSubmit={(e) => {
       e.preventDefault();
-      createItemMutation({ variables: {...item} });
+      createItem({ variables: {...item} });
     }}>
       <fieldset disabled={loading} aria-busy={loading}>
         <div className="mb-4">

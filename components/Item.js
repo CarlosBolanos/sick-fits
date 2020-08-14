@@ -1,6 +1,7 @@
 import React from "react";
 import Link from 'next/link';
-import formatMoney from '../lib/formatMoney'
+import formatMoney from '../lib/formatMoney';
+import {useDeleteItem} from "../hooks/itemHooks";
 
 const Item = ({item}) => {
   const {id, title, description, image} = item;
@@ -25,7 +26,9 @@ const Item = ({item}) => {
         <a>Edit</a>
       </Link>
       <button>Add to cart</button>
-      <button>Delete</button>
+      <button onClick={() => {
+        useDeleteItem({variables: {id: item.id}})
+      }}>Delete</button>
     </div>
   </div>
 }
