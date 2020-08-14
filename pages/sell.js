@@ -1,8 +1,3 @@
-import Page from '../components/Page';
-import Link from 'next/link';
-
-const Sell = () => <Page>
-    <p>Hello Sell </p>     
-</Page>
+const Sell = () => <><p>Hello Sell </p> </>
 
 export default Sell;
