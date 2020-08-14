@@ -1,0 +1,9 @@
+.navItem {
+  @apply text-black p-2 text-center skew-x-3 text-sm ;
+}
+
+@screen md {
+  .navItem {
+    @apply p-5 text-xl;
+  }
+}

@@ -17,11 +17,10 @@ const ALL_ITEMS_QUERY = gql`
 
 const Items = () => {
   const { loading, error, data } = useQuery(ALL_ITEMS_QUERY);
-
   if(loading) return <div>Loading.</div>
   if(error) return <div>Error.</div>
 
-  return <div>
+  return <div className="flex flex-wrap">
     {data.items.map(item => <Item key={item.id} item={item} />)}
   </div>
 }

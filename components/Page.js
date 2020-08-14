@@ -1,14 +1,14 @@
 import React from "react";
-import Header from './Header';
+import Header from './Header/Header';
 import Meta from './Meta';
 
 const Page = (props) => {
     return (
-      <div>
+      <>
         <Meta />
         <Header />
-        <div>{props.children}</div>
-      </div>
+        <div className="container mx-auto">{props.children}</div>
+      </>
     );
 }
 

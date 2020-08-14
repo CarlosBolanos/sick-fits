@@ -2,6 +2,7 @@ import React from "react";
 import { ApolloProvider } from '@apollo/client';
 import Page from "../components/Page";
 import withData from "../lib/withData";
+import '../public/styles.css';
 
 function App({ Component, pageProps, apollo }) {
   console.log('f: app', pageProps)

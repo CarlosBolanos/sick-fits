@@ -1,0 +1,9 @@
+.logo {
+  min-height: 40px;
+}
+
+@screen md {
+  .logo {
+    @apply ml-5;
+  }
+}
