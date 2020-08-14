@@ -5,7 +5,6 @@ import withData from "../lib/withData";
 import '../public/styles.css';
 
 function App({ Component, pageProps, apollo }) {
-  console.log('f: app', pageProps)
   return <ApolloProvider client={apollo}>
     <Page>
       <Component {...pageProps} />
