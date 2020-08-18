@@ -4,7 +4,9 @@ import {useCreateItem} from "../hooks/itemHooks";
 
 const CreateItem = () => {
   const [item, setItem] = useState({title: 'item', description: 'item description', price:20, image:'', largeImage:'' })
-  const {createItem, loading, error, result} = useCreateItem()
+  const {createItem, loading, error, result} = useCreateItem();
+  const [formLoading, setFormLoading] = useState(false);
+  const inProgress = loading || formLoading;
 
   if(result){
     Router.push({
@@ -19,17 +21,30 @@ const CreateItem = () => {
     setItem({...item, [name]: val})
   }
 
+  const handleUploadFile = async (e) => {
+    setFormLoading(true)
+    const files = e.target.files;
+    const data = new FormData();
+    data.append('file', files[0]);
+    data.append('upload_preset', 'sickfits');
+    const res = await fetch('https://api.cloudinary.com/v1_1/garrison/image/upload', {
+      method: 'POST',
+      body: data
+    });
+    setFormLoading(false)
+    const {secure_url, eager} = await res.json();
+    setItem({...item, 'image': secure_url, 'largeImage': eager[0].secure_url})
+  }
+
   return <div className="w-full max-w-xs">
-    {error &&
-    <div> something went wrong, try again!
-      {error}
-    </div>}
-    {loading && <div>Loading....</div>}
+    {inProgress && <div>Loading....</div>}
+    {error && <div> something went wrong, try again!</div>}
+    {item.image && <img src={item.image} alt={item.title} />}
     <form className="shadow-md rounded p-10" onSubmit={(e) => {
       e.preventDefault();
       createItem({ variables: {...item} });
     }}>
-      <fieldset disabled={loading} aria-busy={loading}>
+      <fieldset disabled={inProgress} aria-busy={inProgress}>
         <div className="mb-4">
           <label htmlFor="title">Title</label>
           <input
@@ -50,6 +65,14 @@ const CreateItem = () => {
             id="description" name="description" placeholder="Description" required onChange={handleInputChange}
             value={item.description}/>
         </div>
+
+        <div className="mb-4">
+          <label htmlFor="image">Price</label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+            type="file" id="file" name="image" placeholder="Please upload an image" onChange={handleUploadFile} />
+        </div>
+
         <div className="flex items-center justify-between">
           <button
             className="bg-red-500 hover:bg-white hover:text-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

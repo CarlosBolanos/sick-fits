@@ -20,14 +20,31 @@ export const CREATE_ITEM_MUTATION = gql`
     }
 `;
 
-export const DELETE_ITEM_MUTATION = gql`
-    mutation DELETE_ITEM_MUTATION(
-        $id: String!
+export const UPDATE_ITEM_MUTATION = gql`
+    mutation UPDATE_ITEM_MUTATION (
+        $id: ID!
+        $title: String
+        $description: String
+        $price: Int
     ) {
-        deleteItem(
+        updateItem (
             id: $id
-        )
-    } {
-        id
+            title: $title
+            description: $description
+            price: $price
+        ) {
+            id
+            title
+            description
+            price
+        }
+    }
+`;
+
+export const DELETE_ITEM_MUTATION = gql`
+    mutation DELETE_ITEM_MUTATION($id: ID!) {
+        deleteItem(id: $id) { 
+          id 
+        }
     }
 `

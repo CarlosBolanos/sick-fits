@@ -3,7 +3,12 @@ import Link from 'next/link';
 import formatMoney from '../lib/formatMoney';
 import {useDeleteItem} from "../hooks/itemHooks";
 
+
 const Item = ({item}) => {
+  const {deleteItem, loading: deleteLoading, error: errorLoading, result: deleteResult} = useDeleteItem();
+
+  console.log('f: deleteResult', deleteResult)
+
   const {id, title, description, image} = item;
   const defaultImage = 'https://via.placeholder.com/400'
   return <div className="max-w-sm rounded shadow-lg m-5" key={id}>
@@ -26,9 +31,7 @@ const Item = ({item}) => {
         <a>Edit</a>
       </Link>
       <button>Add to cart</button>
-      <button onClick={() => {
-        useDeleteItem({variables: {id: item.id}})
-      }}>Delete</button>
+      <button onClick={() => deleteItem({variables: {id: item.id}})}>Delete</button>
     </div>
   </div>
 }
