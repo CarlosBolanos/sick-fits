@@ -1,9 +1,17 @@
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { GET_ITEM, ALL_ITEMS_QUERY } from './queries';
+import { GET_ITEM, ALL_ITEMS_QUERY, GET_ITEMS_PAGINATED_QUERY } from './queries';
 import { CREATE_ITEM_MUTATION, DELETE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from './mutations';
 
-export const useGetItems = () => {
-  const { loading, error, data } = useQuery(ALL_ITEMS_QUERY);
+export const useGetItems = (skip, first) => {
+  const { loading, error, data } = useQuery(
+    ALL_ITEMS_QUERY,
+    { variables: { skip, first } }
+  );
+  return { loading, error, data }
+}
+
+export const useGetPaginatedItems = () => {
+  const { loading, error, data } = useQuery(GET_ITEMS_PAGINATED_QUERY);
   return { loading, error, data }
 }
 
@@ -13,7 +21,15 @@ export const useGetItemById = (id) => {
 }
 
 export const useCreateItem = () => {
-  const [createItem, { loading, error, data }] = useMutation(CREATE_ITEM_MUTATION);
+
+  const updateItemCache = (cache, payload) => {
+    const newItem = payload.data.createItem;
+    const data = cache.readQuery({ query: ALL_ITEMS_QUERY });
+    const newItems = [...data.items, newItem];
+    cache.writeQuery({ query: ALL_ITEMS_QUERY, data: { items: newItems } });
+  }
+
+  const [createItem, { loading, error, data }] = useMutation(CREATE_ITEM_MUTATION, { update: updateItemCache });
   let result;
 
   if (data) {
