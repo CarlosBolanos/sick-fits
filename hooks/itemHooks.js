@@ -21,15 +21,13 @@ export const useGetItemById = (id) => {
 }
 
 export const useCreateItem = () => {
-
-  const updateItemCache = (cache, payload) => {
-    const newItem = payload.data.createItem;
-    const data = cache.readQuery({ query: ALL_ITEMS_QUERY });
-    const newItems = [...data.items, newItem];
-    cache.writeQuery({ query: ALL_ITEMS_QUERY, data: { items: newItems } });
-  }
-
-  const [createItem, { loading, error, data }] = useMutation(CREATE_ITEM_MUTATION, { update: updateItemCache });
+  const [createItem, { loading, error, data }] = useMutation(CREATE_ITEM_MUTATION,
+    {
+      refetchQueries: [
+        { query: ALL_ITEMS_QUERY, variables: { skip: 0, first: 6 } },
+        { query: GET_ITEMS_PAGINATED_QUERY }
+      ]
+    });
   let result;
 
   if (data) {
@@ -55,19 +53,24 @@ export const useUpdateItem = () => {
 }
 
 export const useDeleteItem = () => {
-
   const updateItemCache = (cache, payload) => {
     console.log('f: cache', cache, payload);
     const { id } = payload.data.deleteItem;
 
-    const data = cache.readQuery({ query: ALL_ITEMS_QUERY });
+    const data = cache.readQuery({ query: ALL_ITEMS_QUERY, variables: { skip: 0, first: 6 } });
     const newItems = data.items.filter(item => item.id !== id);
-    cache.writeQuery({ query: ALL_ITEMS_QUERY, data: { items: newItems } });
+    cache.writeQuery({ query: ALL_ITEMS_QUERY, variables: { skip: 0, first: 6 }, data: { items: newItems } });
   }
 
   const [deleteItem, { loading, error, data, called }] = useMutation(
-    DELETE_ITEM_MUTATION, { update: updateItemCache }
+    DELETE_ITEM_MUTATION, {
+    refetchQueries: [
+      { query: ALL_ITEMS_QUERY, variables: { skip: 0, first: 6 } },
+      { query: GET_ITEMS_PAGINATED_QUERY },
+    ]
+  }
   );
+
   let result;
 
   if (data) {
