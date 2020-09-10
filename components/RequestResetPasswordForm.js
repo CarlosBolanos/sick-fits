@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { useSignIn } from "../hooks/userHooks";
 import Link from "next/link";
+import Router from "next/router";
+import { useRequestResetPassword } from "../hooks/userHooks";
 
-const SignInForm = () => {
-  const { signin, loading, error, result } = useSignIn();
-  const [user, setUser] = useState({
-    email: "mail@carlos-bolanos.com",
-    password: "password",
-  });
+const RequestResetPasswordForm = () => {
+  const { requestReset, loading, error, data } = useRequestResetPassword();
+  const [email, setEmail] = useState("mail@carlos-bolanos.com");
+
+  if (data) {
+    Router.push({
+      pathname: "resetInProgress",
+    });
+  }
 
   const handleInputChange = ({ target }) => {
     const { name, type, value } = target;
-    setUser({ ...user, [name]: value });
+    setEmail({ email: value });
   };
 
   return (
@@ -23,7 +27,7 @@ const SignInForm = () => {
         aria-busy={loading}
         onSubmit={(e) => {
           e.preventDefault();
-          signin({ variables: { ...user } });
+          requestReset({ variables: { email } });
         }}
       >
         <fieldset className="w-1/2">
@@ -47,22 +51,7 @@ const SignInForm = () => {
               placeholder="enter your email address"
               required
               onChange={handleInputChange}
-              value={user.email}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-lg font-semibold" htmlFor="password">
-              Password
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="enter your password"
-              required
-              onChange={handleInputChange}
-              value={user.password}
+              value={email}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -70,13 +59,8 @@ const SignInForm = () => {
               className="bg-red-500 hover:bg-white hover:text-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Submit
+              Request reset password link
             </button>
-            <Link href="/password/requestReset">
-              <a className="hover:text-red-400 text-red-500 font-bold ">
-                Reset password
-              </a>
-            </Link>
           </div>
         </fieldset>
       </form>
@@ -84,4 +68,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default RequestResetPasswordForm;
