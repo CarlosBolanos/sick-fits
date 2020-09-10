@@ -1,25 +1,22 @@
 import React, { useState } from "react";
-import {useGetItemById, useUpdateItem} from "../hooks/itemHooks";
+import { useGetItemById, useUpdateItem } from "../hooks/itemHooks";
 
-const UpdateItem = ({id}) => {
+const UpdateItem = ({ id }) => {
   const [item, setItem] = useState({})
-  const {data, loading: getItemLoading, error: getItemError} = useGetItemById(id);
-  const {updateItem, loading: updateItemLoading, error: updateItemError} = useUpdateItem();
+  const { data, loading: getItemLoading, error: getItemError } = useGetItemById(id);
+  const { updateItem, loading: updateItemLoading, error: updateItemError } = useUpdateItem();
   const inProgress = getItemLoading || updateItemLoading;
 
-  const handleInputChange = ({target}) => {
-    const {name, type, value} = target;
-    const val = type === 'number'? parseFloat(value): value;
-    setItem({...item, [name]: val})
+  const handleInputChange = ({ target }) => {
+    const { name, type, value } = target;
+    const val = type === 'number' ? parseFloat(value) : value;
+    setItem({ ...item, [name]: val })
   }
 
   const handleUpdateItem = async (e) => {
     e.preventDefault();
-    const itemToBeUpdated = {...item, id};
-    console.log('f: handleUpdateItem', itemToBeUpdated)
-
+    const itemToBeUpdated = { ...item, id };
     const res = await updateItem({ variables: itemToBeUpdated });
-    console.log('f: res', res);
   }
 
   return <div className="w-full max-w-xs">
@@ -33,21 +30,21 @@ const UpdateItem = ({id}) => {
             <label htmlFor="title">Title</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
-              type="text" id="title" name="title" placeholder="Title" onChange={handleInputChange} defaultValue={data.item.title}/>
+              type="text" id="title" name="title" placeholder="Title" onChange={handleInputChange} defaultValue={data.item.title} />
           </div>
           <div className="mb-4">
             <label htmlFor="price">Price</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
               type="number" id="price" name="price" placeholder="0.0" required onChange={handleInputChange}
-              defaultValue={data.item.price}/>
+              defaultValue={data.item.price} />
           </div>
           <div className="mb-4">
             <label htmlFor="description">Description</label>
             <textarea
               className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
               id="description" name="description" placeholder="Description" required onChange={handleInputChange}
-              defaultValue={data.item.description}/>
+              defaultValue={data.item.description} />
           </div>
           <div className="flex items-center justify-between">
             <button
@@ -56,7 +53,7 @@ const UpdateItem = ({id}) => {
               Submit
             </button>
             <button className="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                    type="reset">
+              type="reset">
               Reset
             </button>
           </div>

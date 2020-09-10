@@ -53,8 +53,8 @@ export const useUpdateItem = () => {
 }
 
 export const useDeleteItem = () => {
+  // currently not in use, this approach can be taken when wanting to manually override apollo cache.
   const updateItemCache = (cache, payload) => {
-    console.log('f: cache', cache, payload);
     const { id } = payload.data.deleteItem;
 
     const data = cache.readQuery({ query: ALL_ITEMS_QUERY, variables: { skip: 0, first: 6 } });

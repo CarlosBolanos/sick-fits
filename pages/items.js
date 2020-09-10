@@ -1,13 +1,12 @@
 import React from "react";
 import Item from "../components/Item";
 import Pagination from "../components/Pagination";
-import { useGetItems } from '../hooks/itemHooks'
+import { useGetItems } from '../hooks/itemHooks';
 
 const Items = ({ query }) => {
   const first = 6;
   const currentPage = parseInt(query?.page || 1);
   const skip = (currentPage - 1) * first;
-  console.log("f: items", skip, first);
   const { loading, error, data } = useGetItems(skip, first);
 
   if (loading) return <div>Loading.</div>
