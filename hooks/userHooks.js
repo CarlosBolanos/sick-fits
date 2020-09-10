@@ -5,8 +5,8 @@ import {
   SIGN_OUT_MUTATION,
   REQUEST_RESET_PASSWORD_MUTATION,
   RESET_PASSWORD_MUTATION,
-} from "./mutations";
-import { ME_QUERY } from "./queries";
+} from "../apollo/mutations";
+import { ME_QUERY } from "../apollo/queries";
 
 export const useSignUp = () => {
   const [signup, { loading, error, data }] = useMutation(SIGNUP_MUTATTION, {
@@ -67,7 +67,10 @@ export const useSignOut = () => {
 
 export const useRequestResetPassword = () => {
   const [requestReset, { loading, error, data }] = useMutation(
-    REQUEST_RESET_PASSWORD_MUTATION
+    REQUEST_RESET_PASSWORD_MUTATION,
+    {
+      refetchQueries: [{ query: ME_QUERY }],
+    }
   );
 
   return { requestReset, loading, error, data };
@@ -75,7 +78,10 @@ export const useRequestResetPassword = () => {
 
 export const useResetPassword = () => {
   const [resetPassword, { loading, error, data }] = useMutation(
-    RESET_PASSWORD_MUTATION
+    RESET_PASSWORD_MUTATION,
+    {
+      refetchQueries: [{ query: ME_QUERY }],
+    }
   );
 
   return { resetPassword, loading, error, data };
@@ -83,7 +89,7 @@ export const useResetPassword = () => {
 
 export const useMe = () => {
   let user = { isLoggedIn: false };
-  const { loading, error, data } = useQuery(ME_QUERY);
+  const { loading, error, called, data } = useQuery(ME_QUERY);
 
   if (data?.me) {
     user = { ...data.me, isLoggedIn: true };
@@ -91,6 +97,7 @@ export const useMe = () => {
 
   return {
     loading,
+    called,
     error,
     user,
   };

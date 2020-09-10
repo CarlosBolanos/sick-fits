@@ -1,8 +1,10 @@
 import React from "react";
 import SingleItem from "../../components/SingleItem";
 import { useGetItemById } from "../../hooks/itemHooks";
+import { usePageProps } from "../../hooks/appHooks";
 
-const Item = ({ query }) => {
+const Item = () => {
+  const { query } = usePageProps();
   const { loading, error, data } = useGetItemById(query.id);
   if (loading) return <div>Loading.</div>;
   if (error) return <div>Error.</div>;

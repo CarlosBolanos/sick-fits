@@ -1,7 +1,12 @@
 import React from "react";
+import ResetPasswordForm from "../../components/ResetPasswordForm";
 
 const Reset = ({ query }) => {
-  return <div>Reset password</div>;
+  return (
+    <div>
+      <ResetPasswordForm />
+    </div>
+  );
 };
 
 export default Reset;

@@ -15,7 +15,7 @@ const RequestResetPasswordForm = () => {
 
   const handleInputChange = ({ target }) => {
     const { name, type, value } = target;
-    setEmail({ email: value });
+    setEmail(value);
   };
 
   return (

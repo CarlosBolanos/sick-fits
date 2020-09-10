@@ -1,18 +1,25 @@
 import React, { useState } from "react";
+import Router from "next/router";
 import Link from "next/link";
-import { useSignUp } from "../hooks/userHooks";
+import { useSignUp, useMe } from "../hooks/userHooks";
 
 const SignUpForm = () => {
   const { signup, loading, error, result } = useSignUp();
-  const [user, setUser] = useState({
+  const { user } = useMe();
+
+  const [userData, setUser] = useState({
     name: "carlos",
     email: "mail@carlos-bolanos.com",
     password: "password",
   });
 
+  if (user.isLoggedIn) {
+    Router.push("/me");
+  }
+
   const handleInputChange = ({ target }) => {
     const { name, type, value } = target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...userData, [name]: value });
   };
 
   return (
@@ -24,7 +31,7 @@ const SignUpForm = () => {
         aria-busy={loading}
         onSubmit={(e) => {
           e.preventDefault();
-          signup({ variables: { ...user } });
+          signup({ variables: { ...userData } });
         }}
       >
         <fieldset className="w-1/2">
@@ -51,7 +58,7 @@ const SignUpForm = () => {
               placeholder="enter your name"
               required
               onChange={handleInputChange}
-              value={user.name}
+              value={userData.name}
             />
           </div>
           <div className="mb-4">
@@ -66,7 +73,7 @@ const SignUpForm = () => {
               placeholder="enter your email address"
               required
               onChange={handleInputChange}
-              value={user.email}
+              value={userData.email}
             />
           </div>
           <div className="mb-4">
@@ -81,7 +88,7 @@ const SignUpForm = () => {
               placeholder="enter your password"
               required
               onChange={handleInputChange}
-              value={user.password}
+              value={userData.password}
             />
           </div>
           <div className="flex items-center justify-between">

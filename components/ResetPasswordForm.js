@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { useSignIn } from "../hooks/userHooks";
+import Router from "next/router";
 import Link from "next/link";
+import { useResetPassword, useMe } from "../hooks/userHooks";
+import { usePageProps } from "../hooks/appHooks";
 
-const SignInForm = () => {
-  const { signin, loading, error, result } = useSignIn();
-  const [user, setUser] = useState({
-    email: "mail@carlos-bolanos.com",
+const ResetPasswordForm = () => {
+  const { query } = usePageProps();
+  const { resetPassword, loading, error, result } = useResetPassword();
+  const { user } = useMe();
+
+  const [resetPasswordData, setResetPasswordData] = useState({
+    resetToken: query.resetToken,
     password: "password",
+    passwordConfirm: "password",
   });
+
+  if (user.isLoggedIn) {
+    Router.push("/me");
+  }
 
   const handleInputChange = ({ target }) => {
     const { name, type, value } = target;
-    setUser({ ...user, [name]: value });
+    setResetPasswordData({ ...resetPasswordData, [name]: value });
   };
 
   return (
@@ -23,11 +33,13 @@ const SignInForm = () => {
         aria-busy={loading}
         onSubmit={(e) => {
           e.preventDefault();
-          signin({ variables: { ...user } });
+          resetPassword({ variables: { ...resetPasswordData } });
         }}
       >
         <fieldset className="w-1/2">
-          <legend className="pb-5 text-xl font-semibold">Sign In</legend>
+          <legend className="pb-5 text-xl font-semibold">
+            Password reset form
+          </legend>
           {error && (
             <div className="text-red-500">
               {" "}
@@ -35,21 +47,16 @@ const SignInForm = () => {
               {error.graphQLErrors.map((err) => err.code).join(",")}
             </div>
           )}
-          <div className="mb-4">
-            <label className="text-lg font-semibold" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
-              type="text"
-              name="email"
-              id="email"
-              placeholder="enter your email address"
-              required
-              onChange={handleInputChange}
-              value={user.email}
-            />
-          </div>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+            type="hidden"
+            name="resetToken"
+            id="resetToken"
+            placeholder="enter your email address"
+            required
+            disabled
+            value={resetPasswordData.resetToken}
+          />
           <div className="mb-4">
             <label className="text-lg font-semibold" htmlFor="password">
               Password
@@ -62,7 +69,22 @@ const SignInForm = () => {
               placeholder="enter your password"
               required
               onChange={handleInputChange}
-              value={user.password}
+              value={resetPasswordData.password}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-lg font-semibold" htmlFor="password">
+              Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+              type="password"
+              name="passwordConfirm"
+              id="passwordConfirm"
+              placeholder="confirm your password"
+              required
+              onChange={handleInputChange}
+              value={resetPasswordData.passwordConfirm}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -72,11 +94,6 @@ const SignInForm = () => {
             >
               Submit
             </button>
-            <Link href="/password/requestReset">
-              <a className="hover:text-red-400 text-red-500 font-bold ">
-                Reset password
-              </a>
-            </Link>
           </div>
         </fieldset>
       </form>
@@ -84,4 +101,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default ResetPasswordForm;

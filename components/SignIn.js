@@ -1,17 +1,24 @@
 import React, { useState } from "react";
-import { useSignIn } from "../hooks/userHooks";
 import Link from "next/link";
+import Router from "next/router";
+import { useSignIn, useMe } from "../hooks/userHooks";
 
 const SignInForm = () => {
   const { signin, loading, error, result } = useSignIn();
-  const [user, setUser] = useState({
+  const { user } = useMe();
+
+  const [userData, setUser] = useState({
     email: "mail@carlos-bolanos.com",
     password: "password",
   });
 
+  if (user.isLoggedIn) {
+    Router.push("/me");
+  }
+
   const handleInputChange = ({ target }) => {
     const { name, type, value } = target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...userData, [name]: value });
   };
 
   return (
@@ -23,7 +30,7 @@ const SignInForm = () => {
         aria-busy={loading}
         onSubmit={(e) => {
           e.preventDefault();
-          signin({ variables: { ...user } });
+          signin({ variables: { ...userData } });
         }}
       >
         <fieldset className="w-1/2">
@@ -47,7 +54,7 @@ const SignInForm = () => {
               placeholder="enter your email address"
               required
               onChange={handleInputChange}
-              value={user.email}
+              value={userData.email}
             />
           </div>
           <div className="mb-4">
@@ -62,7 +69,7 @@ const SignInForm = () => {
               placeholder="enter your password"
               required
               onChange={handleInputChange}
-              value={user.password}
+              value={userData.password}
             />
           </div>
           <div className="flex items-center justify-between">

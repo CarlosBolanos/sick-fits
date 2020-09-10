@@ -54,8 +54,9 @@ export const RESET_PASSWORD_MUTATION = gql`
       password: $password
       passwordConfirm: $passwordConfirm
     ) {
-      statusCode
-      message
+      id
+      name
+      email
     }
   }
 `;
