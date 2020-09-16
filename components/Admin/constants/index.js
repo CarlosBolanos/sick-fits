@@ -1,0 +1,8 @@
+export const POSSIBLE_PERMITIONS = [
+  "ADMIN",
+  "USER",
+  "ITEM_CREATE",
+  "ITEM_UPDATE",
+  "ITEM_DELETE",
+  "PERMISSION_UPDATE",
+];

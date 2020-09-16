@@ -60,3 +60,15 @@ export const RESET_PASSWORD_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_USER_PERMISSIONS = gql`
+  mutation UPDATE_USER_PERMISSIONS(
+    $permissions: [Permission]
+    $userId: String
+  ) {
+    updatePermissions(permissions: $permissions, userId: $userId) {
+      id
+      permissions
+    }
+  }
+`;

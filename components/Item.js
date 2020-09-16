@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import formatMoney from "../lib/formatMoney";
 import { useDeleteItem } from "../hooks/itemHooks";
+import { useMe } from "../hooks/userHooks";
 
 const Item = ({ item }) => {
   const {
@@ -10,6 +11,7 @@ const Item = ({ item }) => {
     error: errorLoading,
     result: deleteResult,
   } = useDeleteItem();
+  const { user } = useMe();
 
   const { id, title, description, image } = item;
   const defaultImage = "https://via.placeholder.com/400";
@@ -28,24 +30,28 @@ const Item = ({ item }) => {
         <p className="text-gray-700 text-base">{description}</p>
       </div>
       <div className="grid grid-cols-3 text-center divide-x divide-gray-200 text-gray-700">
-        <Link
-          href={{
-            pathname: "items/update",
-            query: { id: item.id },
-          }}
-        >
-          <a>Edit</a>
-        </Link>
+        {user.isLoggedIn && user.id === item.user.id && (
+          <Link
+            href={{
+              pathname: "items/update",
+              query: { id: item.id },
+            }}
+          >
+            <a>Edit</a>
+          </Link>
+        )}
         <button>Add to cart</button>
-        <button
-          onClick={() => {
-            confirm("are you sure you want to delete this item?")
-              ? deleteItem({ variables: { id: item.id } })
-              : null;
-          }}
-        >
-          Delete
-        </button>
+        {user.isLoggedIn && user.id === item.user.id && (
+          <button
+            onClick={() => {
+              confirm("are you sure you want to delete this item?")
+                ? deleteItem({ variables: { id: item.id } })
+                : null;
+            }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );

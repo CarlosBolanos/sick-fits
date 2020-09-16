@@ -5,8 +5,9 @@ import {
   SIGN_OUT_MUTATION,
   REQUEST_RESET_PASSWORD_MUTATION,
   RESET_PASSWORD_MUTATION,
+  UPDATE_USER_PERMISSIONS,
 } from "../apollo/mutations";
-import { ME_QUERY } from "../apollo/queries";
+import { ME_QUERY, GET_ALL_USERS_QUERY } from "../apollo/queries";
 
 export const useSignUp = () => {
   const [signup, { loading, error, data }] = useMutation(SIGNUP_MUTATTION, {
@@ -24,6 +25,21 @@ export const useSignUp = () => {
     loading,
     error,
     result,
+  };
+};
+
+export const useGetAllUsers = () => {
+  const { loading, error, data } = useQuery(GET_ALL_USERS_QUERY);
+
+  let users;
+  if (data) {
+    users = data?.users;
+  }
+
+  return {
+    loading,
+    error,
+    users,
   };
 };
 
@@ -101,4 +117,12 @@ export const useMe = () => {
     error,
     user,
   };
+};
+
+export const useUpdateUserPermissions = () => {
+  const [updatePermissions, loading, error, data] = useMutation(
+    UPDATE_USER_PERMISSIONS
+  );
+
+  return { updatePermissions, loading, error, data };
 };
